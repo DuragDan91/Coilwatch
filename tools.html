@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tools & Calculators — Coilwatch</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2314181c'/%3E%3Crect x='30' y='30' width='40' height='40' rx='6' fill='%23e8a33d'/%3E%3C/svg%3E">
+<meta name="description" content="Free procurement calculators: landed cost, blended multi-material cost, quote sanity-checker, escalation clause auditor, and a savings tracker. No signup.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span class="logo-mark"></span>COILWATCH</div>
+  <div class="navlinks">
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="tools.html" class="active">Tools</a>
+    <a href="track-record.html">Track Record</a>
+    <a href="index.html#pricing">Pricing</a>
+  </div>
+  <a href="index.html#waitlist" class="nav-cta">Join waitlist</a>
+</nav>
+
+<div class="page-header">
+  <div class="wrap">
+    <h1>Tools & Calculators</h1>
+    <p>Every tool here is free and needs no signup. Jump to any of them:</p>
+    <div style="margin-top:18px; display:flex; gap:18px; flex-wrap:wrap; font-family:var(--mono); font-size:13px;">
+      <a href="#calculator" style="color:var(--steel-light);">Landed Cost →</a>
+      <a href="#blended" style="color:var(--steel-light);">Blended Cost →</a>
+      <a href="#quote-check" style="color:var(--steel-light);">Quote Check →</a>
+      <a href="#audit" style="color:var(--steel-light);">Escalation Audit →</a>
+      <a href="#savings" style="color:var(--steel-light);">Savings Tracker →</a>
+    </div>
+  </div>
+</div>
+
+<section id="calculator" class="tool-block">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="calc-badge">FREE · NO SIGNUP</span>
+      <h2>Try the landed cost formula yourself</h2>
+      <p>Works for any material, not just the ones on the dashboard. Enter your numbers and see the real cost, right now.</p>
+    </div>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="calc-row3">
+          <div class="audit-field">
+            <label>Material price ($/unit)</label>
+            <input type="number" id="lcPrice" value="1000" step="0.01">
+          </div>
+          <div class="audit-field">
+            <label>Tariff rate (%)</label>
+            <input type="number" id="lcTariff" value="25" step="0.1">
+          </div>
+          <div class="audit-field">
+            <label>Freight ($/unit)</label>
+            <input type="number" id="lcFreight" value="40" step="0.01">
+          </div>
+        </div>
+        <button class="audit-btn" id="lcCalcBtn">Calculate landed cost</button>
+
+        <div class="calc-breakdown">
+          <div class="calc-bar" id="lcBar">
+            <span id="lcBarMaterial" style="background:var(--steel);"></span><span id="lcBarTariff" style="background:var(--amber);"></span><span id="lcBarFreight" style="background:var(--red);"></span>
+          </div>
+          <div class="calc-legend">
+            <span><span class="sw" style="background:var(--steel);"></span>Material <span id="lcMaterialPct">—</span></span>
+            <span><span class="sw" style="background:var(--amber);"></span>Tariff <span id="lcTariffPct">—</span></span>
+            <span><span class="sw" style="background:var(--red);"></span>Freight <span id="lcFreightPct">—</span></span>
+          </div>
+        </div>
+
+        <div class="calc-total">
+          <span class="k">Landed cost per unit</span>
+          <span class="v" id="lcTotal">$1,290.00</span>
+        </div>
+      </div>
+      <div class="audit-copy">
+        <p style="color:var(--text-dim); font-size:15px; margin-bottom:16px; max-width:420px;">This is the exact formula behind every number on the Coilwatch dashboard: material price, plus the tariff rate applied to it, plus your freight cost per unit. No signup needed to try it.</p>
+        <ul>
+          <li>Formula: Price × (1 + Tariff%) + Freight</li>
+          <li>Useful for a one-off quote check on anything you buy</li>
+          <li>The paid dashboard automates this daily, for the materials you track</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="blended" class="tool-block">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="calc-badge">FREE · NO SIGNUP</span>
+      <h2>Blend multiple materials into one landed cost</h2>
+      <p>Most finished products aren't one material — cost out an assembly made of several inputs at once, instead of checking each one separately.</p>
+    </div>
+    <div class="calc-card">
+      <div class="sv-form" style="grid-template-columns:1.3fr 1fr 0.8fr 1fr; margin-bottom:14px;">
+        <div class="sv-field"><label>Component</label></div>
+        <div class="sv-field"><label>Material cost ($)</label></div>
+        <div class="sv-field"><label>Tariff (%)</label></div>
+        <div class="sv-field"><label>Freight ($)</label></div>
+      </div>
+      <div id="blRows"></div>
+      <button class="audit-btn" id="blCalcBtn" style="margin-top:8px;">Calculate blended cost</button>
+
+      <table class="sv-table" id="blTable" style="margin-top:22px;">
+        <thead><tr><th>Component</th><th>Material</th><th>Tariff</th><th>Freight</th><th>Landed</th></tr></thead>
+        <tbody id="blTableBody"></tbody>
+      </table>
+
+      <div class="calc-total">
+        <span class="k">Total blended landed cost</span>
+        <span class="v" id="blTotal">$0.00</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="quote-check" class="tool-block">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="calc-badge">FREE · NO SIGNUP</span>
+      <h2>Is this quote actually in line with the market?</h2>
+      <p>Paste in a price a supplier quoted you and see how it compares to today's reference price — a quick gut-check, no contract or history required.</p>
+    </div>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="audit-field">
+          <label>Material</label>
+          <select id="qcMaterial" style="width:100%; padding:10px 12px; border-radius:3px; border:1px solid var(--line); background:var(--bg); color:var(--text); font-family:var(--mono); font-size:14px;">
+            <option value="3193|USD/mt">Aluminum — ref. $3,193/mt</option>
+            <option value="1135|USD/ton">HRC Steel — ref. $1,135/ton</option>
+            <option value="6.20|USD/lb">Copper — ref. $6.20/lb</option>
+            <option value="642.50|USD/MBF">Lumber — ref. $642.50/MBF</option>
+            <option value="0.62|USD/lb">Resin (PE) — ref. $0.62/lb</option>
+          </select>
+        </div>
+        <div class="audit-field">
+          <label>Your quoted price (same unit as reference)</label>
+          <input type="number" id="qcQuoted" step="0.01" placeholder="0.00">
+        </div>
+        <button class="audit-btn" id="qcCheckBtn">Check this quote</button>
+
+        <div class="audit-result" id="qcResult">
+          <div class="audit-result-row"><span class="k">Today's reference price</span><span class="v" id="qcReference">—</span></div>
+          <div class="audit-result-row"><span class="k">Your quoted price</span><span class="v" id="qcQuotedOut">—</span></div>
+          <div class="audit-result-row"><span class="k">Difference</span><span class="v" id="qcDiff">—</span></div>
+          <div class="audit-flag" id="qcFlag">
+            <div class="audit-flag-title" id="qcFlagTitle"></div>
+            <p id="qcFlagBody"></p>
+          </div>
+        </div>
+      </div>
+      <div class="audit-copy">
+        <p style="color:var(--text-dim); font-size:15px; margin-bottom:16px; max-width:420px;">Reference prices are the same sample figures shown on the live dashboard — a quick way to sanity-check a single quote without digging up historical data yourself.</p>
+        <ul>
+          <li>Within ~5% of reference: generally in line</li>
+          <li>Meaningfully above: worth asking why</li>
+          <li>Meaningfully below: worth double-checking the terms</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="audit" class="tool-block">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Also included</div>
+      <h2>Catch supplier math errors on escalation clauses</h2>
+      <p>Most index-linked contracts get re-priced correctly. Some don't — and the errors almost always favor the supplier. This checks the math for you against real published index data.</p>
+    </div>
+    <div class="audit-grid">
+      <div class="audit-copy">
+        <p style="color:var(--text-dim); font-size:15px; margin-bottom:16px; max-width:420px;">Enter your contract's base terms once. When a supplier sends a price increase, plug in what they billed and see instantly whether it matches what the contract actually supports.</p>
+        <ul>
+          <li>Uses real published index data, not estimates</li>
+          <li>Shows its work — exact index values and dates used</li>
+          <li>Flags a dollar discrepancy you can bring back to the supplier</li>
+        </ul>
+      </div>
+      <div class="audit-card">
+        <h4>Try It — Escalation Check</h4>
+        <div class="audit-row2">
+          <div class="audit-field">
+            <label>Base price ($/unit)</label>
+            <input type="number" id="auBasePrice" value="100" step="0.01">
+          </div>
+          <div class="audit-field">
+            <label>Base index value</label>
+            <input type="number" id="auBaseIndex" value="200" step="0.01">
+          </div>
+        </div>
+        <div class="audit-row2">
+          <div class="audit-field">
+            <label>Current index value</label>
+            <input type="number" id="auCurrentIndex" value="224" step="0.01">
+          </div>
+          <div class="audit-field">
+            <label>Invoiced price ($/unit)</label>
+            <input type="number" id="auInvoiced" value="118" step="0.01">
+          </div>
+        </div>
+        <button class="audit-btn" id="auCheckBtn">Check the math</button>
+        <div class="audit-result" id="auResult">
+          <div class="audit-result-row"><span class="k">Formula</span><span class="v">Base × (Current ÷ Base index)</span></div>
+          <div class="audit-result-row"><span class="k">Contracted price should be</span><span class="v" id="auContracted">—</span></div>
+          <div class="audit-result-row"><span class="k">Supplier invoiced</span><span class="v" id="auInvoicedOut">—</span></div>
+          <div class="audit-result-row"><span class="k">Discrepancy</span><span class="v" id="auDiscrepancy">—</span></div>
+          <div class="audit-flag" id="auFlag">
+            <div class="audit-flag-title" id="auFlagTitle"></div>
+            <p id="auFlagBody"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="savings" class="tool-block">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="calc-badge">FREE · NO SIGNUP</span>
+      <h2>Track what you've saved</h2>
+      <p>Log the quoted price vs. what you actually negotiated, and generate the "here's what I saved us" summary your manager keeps asking for.</p>
+    </div>
+    <div class="sv-note">Your entries are stored only in this browser (not sent anywhere) — they'll be there next time you visit this page on this device, but won't sync across devices or survive clearing browser data.</div>
+    <div class="sv-card">
+      <div class="sv-form">
+        <div class="sv-field">
+          <label>Part / PO name</label>
+          <input type="text" id="svName" placeholder="e.g. Steel bracket 4402">
+        </div>
+        <div class="sv-field">
+          <label>Quoted price ($)</label>
+          <input type="number" id="svQuoted" step="0.01" placeholder="0.00">
+        </div>
+        <div class="sv-field">
+          <label>Final price ($)</label>
+          <input type="number" id="svFinal" step="0.01" placeholder="0.00">
+        </div>
+        <div class="sv-field">
+          <label>Qty</label>
+          <input type="number" id="svQty" step="1" value="1">
+        </div>
+        <button class="sv-add-btn" id="svAddBtn">Add entry</button>
+      </div>
+
+      <table class="sv-table" id="svTable">
+        <thead>
+          <tr><th>Part / PO</th><th>Quoted</th><th>Final</th><th>Qty</th><th>Savings</th><th></th></tr>
+        </thead>
+        <tbody id="svTableBody"></tbody>
+      </table>
+      <div class="sv-empty" id="svEmpty">No entries yet — add your first PO above.</div>
+
+      <div class="sv-summary">
+        <div class="sv-summary-item">
+          <div class="k">Total savings</div>
+          <div class="v" id="svTotalSavings">$0</div>
+        </div>
+        <div class="sv-summary-item">
+          <div class="k">POs logged</div>
+          <div class="v" id="svCount">0</div>
+        </div>
+        <div class="sv-summary-item">
+          <div class="k">Avg savings %</div>
+          <div class="v" id="svAvgPct">—</div>
+        </div>
+      </div>
+      <button class="sv-copy-btn" id="svCopyBtn">Copy summary for a report</button>
+      <span class="sv-copy-status" id="svCopyStatus"></span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p style="color:var(--text-dim); font-size:13px; margin-bottom:10px;">Built by someone with a supply chain and procurement background, as a side project to solve a problem worth solving properly.</p>
+  © 2026 Coilwatch. Signals are informational only — not investment, legal, or trade compliance advice.
+</footer>
+
+<script>
+function calcLandedCost() {
+  const price = parseFloat(document.getElementById('lcPrice').value) || 0;
+  const tariffPct = parseFloat(document.getElementById('lcTariff').value) || 0;
+  const freight = parseFloat(document.getElementById('lcFreight').value) || 0;
+
+  const tariffAmt = price * (tariffPct / 100);
+  const total = price + tariffAmt + freight;
+
+  document.getElementById('lcTotal').textContent = '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+  const materialShare = total > 0 ? (price / total) * 100 : 0;
+  const tariffShare = total > 0 ? (tariffAmt / total) * 100 : 0;
+  const freightShare = total > 0 ? (freight / total) * 100 : 0;
+
+  document.getElementById('lcBarMaterial').style.width = materialShare + '%';
+  document.getElementById('lcBarTariff').style.width = tariffShare + '%';
+  document.getElementById('lcBarFreight').style.width = freightShare + '%';
+
+  document.getElementById('lcMaterialPct').textContent = materialShare.toFixed(0) + '%';
+  document.getElementById('lcTariffPct').textContent = tariffShare.toFixed(0) + '%';
+  document.getElementById('lcFreightPct').textContent = freightShare.toFixed(0) + '%';
+}
+document.getElementById('lcCalcBtn').addEventListener('click', calcLandedCost);
+calcLandedCost(); // run once on load with default values
+
+
+// ---------- Blended multi-material cost calculator ----------
+const BL_ROW_COUNT = 4;
+const blRowsEl = document.getElementById('blRows');
+let blRowsHtml = '';
+for (let i = 0; i < BL_ROW_COUNT; i++) {
+  blRowsHtml += `<div class="sv-form" style="grid-template-columns:1.3fr 1fr 0.8fr 1fr; margin-bottom:10px;">
+    <div class="sv-field"><input type="text" id="blName${i}" placeholder="e.g. Steel bracket"></div>
+    <div class="sv-field"><input type="number" id="blCost${i}" step="0.01" placeholder="0.00"></div>
+    <div class="sv-field"><input type="number" id="blTariff${i}" step="0.1" placeholder="0"></div>
+    <div class="sv-field"><input type="number" id="blFreight${i}" step="0.01" placeholder="0.00"></div>
+  </div>`;
+}
+blRowsEl.innerHTML = blRowsHtml;
+
+document.getElementById('blCalcBtn').addEventListener('click', () => {
+  let total = 0;
+  const rows = [];
+  for (let i = 0; i < BL_ROW_COUNT; i++) {
+    const name = document.getElementById(`blName${i}`).value.trim();
+    const cost = parseFloat(document.getElementById(`blCost${i}`).value);
+    if (!name || isNaN(cost)) continue;
+    const tariffPct = parseFloat(document.getElementById(`blTariff${i}`).value) || 0;
+    const freight = parseFloat(document.getElementById(`blFreight${i}`).value) || 0;
+    const tariffAmt = cost * (tariffPct / 100);
+    const landed = cost + tariffAmt + freight;
+    total += landed;
+    rows.push({name, cost, tariffPct, freight, landed});
+  }
+
+  const tbody = document.getElementById('blTableBody');
+  tbody.innerHTML = rows.map(r => `<tr>
+    <td class="name">${r.name}</td>
+    <td>$${r.cost.toFixed(2)}</td>
+    <td>${r.tariffPct}%</td>
+    <td>$${r.freight.toFixed(2)}</td>
+    <td>$${r.landed.toFixed(2)}</td>
+  </tr>`).join('');
+
+  document.getElementById('blTotal').textContent = '$' + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+});
+
+// ---------- Quote sanity-checker ----------
+document.getElementById('qcCheckBtn').addEventListener('click', () => {
+  const select = document.getElementById('qcMaterial');
+  const [refPriceStr, unit] = select.value.split('|');
+  const refPrice = parseFloat(refPriceStr);
+  const quoted = parseFloat(document.getElementById('qcQuoted').value);
+
+  if (isNaN(quoted)) return;
+
+  const diffPct = ((quoted - refPrice) / refPrice) * 100;
+
+  document.getElementById('qcReference').textContent = `${refPrice.toLocaleString()} ${unit}`;
+  document.getElementById('qcQuotedOut').textContent = `${quoted.toLocaleString()} ${unit}`;
+  document.getElementById('qcDiff').textContent = (diffPct >= 0 ? '+' : '') + diffPct.toFixed(1) + '%';
+
+  const flagEl = document.getElementById('qcFlag');
+  const titleEl = document.getElementById('qcFlagTitle');
+  const bodyEl = document.getElementById('qcFlagBody');
+
+  if (Math.abs(diffPct) <= 5) {
+    flagEl.className = 'audit-flag ok';
+    titleEl.textContent = 'IN LINE — close to the reference price';
+    bodyEl.textContent = 'This quote is within a normal range of the current market reference price.';
+  } else if (diffPct > 5) {
+    flagEl.className = 'audit-flag warn';
+    titleEl.textContent = 'HIGH — meaningfully above reference';
+    bodyEl.textContent = `This quote is ${diffPct.toFixed(1)}% above today's reference price. Worth asking the supplier what's driving the difference — grade, volume, lead time, or margin.`;
+  } else {
+    flagEl.className = 'audit-flag warn';
+    titleEl.textContent = 'LOW — meaningfully below reference';
+    bodyEl.textContent = `This quote is ${Math.abs(diffPct).toFixed(1)}% below today's reference price. Worth double-checking the spec, grade, or payment terms before assuming it's simply a good deal.`;
+  }
+
+  document.getElementById('qcResult').classList.add('show');
+});
+
+
+const auCheckBtn = document.getElementById('auCheckBtn');
+auCheckBtn.addEventListener('click', () => {
+  const basePrice = parseFloat(document.getElementById('auBasePrice').value) || 0;
+  const baseIndex = parseFloat(document.getElementById('auBaseIndex').value) || 1;
+  const currentIndex = parseFloat(document.getElementById('auCurrentIndex').value) || 0;
+  const invoiced = parseFloat(document.getElementById('auInvoiced').value) || 0;
+
+  const contracted = basePrice * (currentIndex / baseIndex);
+  const discrepancy = invoiced - contracted;
+  const discrepancyPct = contracted !== 0 ? (discrepancy / contracted) * 100 : 0;
+
+  document.getElementById('auContracted').textContent = '$' + contracted.toFixed(2);
+  document.getElementById('auInvoicedOut').textContent = '$' + invoiced.toFixed(2);
+  document.getElementById('auDiscrepancy').textContent =
+    (discrepancy >= 0 ? '+$' : '-$') + Math.abs(discrepancy).toFixed(2) + ' (' + discrepancyPct.toFixed(1) + '%)';
+
+  const flagEl = document.getElementById('auFlag');
+  const titleEl = document.getElementById('auFlagTitle');
+  const bodyEl = document.getElementById('auFlagBody');
+
+  // Small tolerance for rounding — flag anything beyond ~1%
+  if (Math.abs(discrepancyPct) <= 1) {
+    flagEl.className = 'audit-flag ok';
+    titleEl.textContent = 'MATCHES — no discrepancy found';
+    titleEl.style.color = '';
+    bodyEl.textContent = "The invoiced price is in line with what the contract's escalation formula supports.";
+  } else if (discrepancy > 0) {
+    flagEl.className = 'audit-flag warn';
+    titleEl.textContent = 'FLAGGED — supplier may have overcharged';
+    bodyEl.textContent = `The invoiced price is $${discrepancy.toFixed(2)} above what the formula supports. Worth reviewing against the contract before paying, and following up with the supplier if it doesn't reconcile.`;
+  } else {
+    flagEl.className = 'audit-flag ok';
+    titleEl.textContent = 'BELOW CONTRACTED — no overcharge';
+    bodyEl.textContent = "The invoiced price is at or below what the formula supports. No action needed.";
+  }
+
+  document.getElementById('auResult').classList.add('show');
+});
+
+
+const SV_STORAGE_KEY = 'coilwatch_savings_entries';
+
+function svLoadEntries() {
+  try {
+    const raw = localStorage.getItem(SV_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function svSaveEntries(entries) {
+  try {
+    localStorage.setItem(SV_STORAGE_KEY, JSON.stringify(entries));
+  } catch (e) { /* localStorage unavailable — entries just won't persist this session */ }
+}
+
+function svFormatMoney(n) {
+  return '$' + n.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
+function svRender() {
+  const entries = svLoadEntries();
+  const tbody = document.getElementById('svTableBody');
+  const emptyEl = document.getElementById('svEmpty');
+  const table = document.getElementById('svTable');
+
+  if (entries.length === 0) {
+    table.style.display = 'none';
+    emptyEl.style.display = 'block';
+  } else {
+    table.style.display = '';
+    emptyEl.style.display = 'none';
+  }
+
+  tbody.innerHTML = entries.map((e, i) => {
+    const savingsTotal = (e.quoted - e.final) * e.qty;
+    const cls = savingsTotal >= 0 ? 'save-pos' : 'save-neg';
+    return `<tr>
+      <td class="name">${e.name}</td>
+      <td>${svFormatMoney(e.quoted)}</td>
+      <td>${svFormatMoney(e.final)}</td>
+      <td>${e.qty}</td>
+      <td class="${cls}">${savingsTotal >= 0 ? '+' : '-'}${svFormatMoney(Math.abs(savingsTotal))}</td>
+      <td><button class="sv-del" data-idx="${i}" title="Delete">×</button></td>
+    </tr>`;
+  }).join('');
+
+  tbody.querySelectorAll('.sv-del').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.idx, 10);
+      const current = svLoadEntries();
+      current.splice(idx, 1);
+      svSaveEntries(current);
+      svRender();
+    });
+  });
+
+  const totalSavings = entries.reduce((sum, e) => sum + (e.quoted - e.final) * e.qty, 0);
+  const avgPct = entries.length > 0
+    ? entries.reduce((sum, e) => sum + (e.quoted > 0 ? ((e.quoted - e.final) / e.quoted) * 100 : 0), 0) / entries.length
+    : null;
+
+  document.getElementById('svTotalSavings').textContent = (totalSavings >= 0 ? '' : '-') + svFormatMoney(Math.abs(totalSavings));
+  document.getElementById('svCount').textContent = entries.length;
+  document.getElementById('svAvgPct').textContent = avgPct === null ? '—' : avgPct.toFixed(1) + '%';
+}
+
+document.getElementById('svAddBtn').addEventListener('click', () => {
+  const name = document.getElementById('svName').value.trim();
+  const quoted = parseFloat(document.getElementById('svQuoted').value);
+  const final = parseFloat(document.getElementById('svFinal').value);
+  const qty = parseFloat(document.getElementById('svQty').value) || 1;
+
+  if (!name || isNaN(quoted) || isNaN(final)) {
+    return; // silently no-op on incomplete entry rather than an alert popup
+  }
+
+  const entries = svLoadEntries();
+  entries.push({name, quoted, final, qty, addedAt: new Date().toISOString()});
+  svSaveEntries(entries);
+
+  document.getElementById('svName').value = '';
+  document.getElementById('svQuoted').value = '';
+  document.getElementById('svFinal').value = '';
+  document.getElementById('svQty').value = '1';
+
+  svRender();
+});
+
+document.getElementById('svCopyBtn').addEventListener('click', () => {
+  const entries = svLoadEntries();
+  const totalSavings = entries.reduce((sum, e) => sum + (e.quoted - e.final) * e.qty, 0);
+  const lines = entries.map(e => {
+    const s = (e.quoted - e.final) * e.qty;
+    return `- ${e.name}: quoted ${svFormatMoney(e.quoted)}, final ${svFormatMoney(e.final)}, qty ${e.qty} — saved ${svFormatMoney(s)}`;
+  });
+  const report = `Procurement Savings Summary\nTotal saved: ${svFormatMoney(totalSavings)} across ${entries.length} PO(s)\n\n${lines.join('\n')}`;
+
+  const statusEl = document.getElementById('svCopyStatus');
+  if (navigator.clipboard && entries.length > 0) {
+    navigator.clipboard.writeText(report).then(() => {
+      statusEl.textContent = 'Copied!';
+      setTimeout(() => { statusEl.textContent = ''; }, 2000);
+    }).catch(() => {
+      statusEl.textContent = 'Could not copy — try selecting manually.';
+    });
+  } else if (entries.length === 0) {
+    statusEl.textContent = 'Add an entry first.';
+    setTimeout(() => { statusEl.textContent = ''; }, 2000);
+  }
+});
+
+svRender(); // initial render on page load
+</script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Coilwatch</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2314181c'/%3E%3Crect x='30' y='30' width='40' height='40' rx='6' fill='%23e8a33d'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span class="logo-mark"></span>COILWATCH</div>
+  <div class="navlinks">
+    <a href="index.html">Home</a>
+    <a href="dashboard.html" class="active">Dashboard</a>
+    <a href="tools.html">Tools</a>
+    <a href="track-record.html">Track Record</a>
+    <a href="index.html#pricing">Pricing</a>
+  </div>
+  <a href="index.html#waitlist" class="nav-cta">Join waitlist</a>
+</nav>
+
+<div class="page-header">
+  <div class="wrap">
+    <h1>Live Dashboard</h1>
+    <p>Every material and currency shown here uses the same formula: material price plus tariff surcharge plus freight estimate equals landed cost. Sample data below — a live account updates these daily.</p>
+  </div>
+</div>
+
+<section id="dashboard" style="border-bottom:none; padding-top:44px;">
+  <div class="wrap">
+    <div class="demo-panel">
+      <div class="demo-tabs" style="flex-wrap:wrap;">
+        <div class="demo-tab active" data-material="rawaluminum">ALUMINUM</div>
+        <div class="demo-tab" data-material="rawsteel">HRC STEEL</div>
+        <div class="demo-tab" data-material="copper">COPPER</div>
+        <div class="demo-tab" data-material="lumber">LUMBER</div>
+        <div class="demo-tab" data-material="resin">RESIN</div>
+        <div class="demo-tab" data-material="freight">FREIGHT/FUEL</div>
+        <div class="demo-tab" data-material="fx">USD/CNY</div>
+      </div>
+      <div class="demo-body">
+        <div>
+          <div class="price-header">
+            <div><span class="price-big" id="priceBig">3,193</span><span class="price-unit">USD / metric ton</span></div>
+            <div class="price-delta delta-down" id="priceDelta">↓ 17% vs early June high</div>
+          </div>
+          <svg class="chart" viewBox="0 0 500 180" preserveAspectRatio="none" id="chartSvg"></svg>
+          <div class="chart-caption"><span>90 days ago</span><span>Today</span></div>
+        </div>
+        <div>
+          <div class="stat-list" id="statList"></div>
+          <div class="verdict-box verdict-watch" id="verdictBox">
+            <div class="verdict-title">WATCH — approaching 6-month low</div>
+            <p>Aluminum is trading well below its early-June peak after the EGA smelter disruption began unwinding. Worth reviewing your Q3 aluminum PO timing.</p>
+          </div>
+        </div>
+      </div>
+      <div class="demo-note"><strong>Note:</strong> figures shown are illustrative sample levels for demo purposes. A live deployment pulls current material, tariff, and freight data automatically.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p style="color:var(--text-dim); font-size:13px; margin-bottom:10px;">Built by someone with a supply chain and procurement background, as a side project to solve a problem worth solving properly.</p>
+  © 2026 Coilwatch. Signals are informational only — not investment, legal, or trade compliance advice.
+</footer>
+
+<script>
+const datasets = {
+  rawaluminum: {
+    unit: "USD / metric ton (fittings & housings)",
+    price: "3,193",
+    deltaText: "↑ rebounding from 4-month low",
+    deltaClass: "delta-up",
+    series: [3085,3095,3105,3100,3110,3115,3108,3120,3130,3125,3135,3140,3138,3145,3150,3148,3155,3160,3165,3158,3170,3175,3168,3178,3182,3175,3185,3160,3193,3193],
+    stats: [
+      ["Material price","$3,193/mt"],
+      ["Tariff surcharge","+$1,597/mt (Sec. 232, 50% tier)"],
+      ["Freight estimate","+$95/mt (est.)"],
+      ["Landed cost","$4,885/mt"],
+      ["Trend (30d)","Rebounding off a 4-month low"]
+    ],
+    verdict: {cls:"verdict-watch", title:"WATCH — rebounding off multi-month low", body:"Aluminum has climbed back from its July low as LME warehouse stocks dropped below 300,000 tonnes. Tariff tier: 50% applies to wholly-aluminum articles; derivative products may qualify for the 25% tier instead — worth checking which applies to your specific import."}
+  },
+  rawsteel: {
+    unit: "USD / short ton (HRC — housings & brackets)",
+    price: "1,135",
+    deltaText: "↑ 32% vs earlier-2026 lows",
+    deltaClass: "delta-up",
+    series: [860,865,870,875,880,890,900,910,920,930,940,955,970,985,1000,1015,1030,1045,1060,1075,1090,1100,1110,1115,1120,1125,1128,1130,1135,1135],
+    stats: [
+      ["Material price","$1,135/ton (Nucor CSP)"],
+      ["Tariff surcharge","+$567/ton (Sec. 232, 50% tier)"],
+      ["Freight estimate","+$28/ton (est.)"],
+      ["Landed cost","$1,730/ton"],
+      ["Trend (30d)","Firming — mill outages + import restrictions"]
+    ],
+    verdict: {cls:"verdict-buy", title:"CAUTION — price has climbed significantly", body:"Nucor's spot HR coil price has risen well above where it sat earlier this year, with mill maintenance outages and import restrictions both providing support. Worth reviewing timing on any near-term steel POs before further increases."}
+  },
+  copper: {
+    unit: "USD / lb (LME/COMEX reference)",
+    price: "6.20",
+    deltaText: "↔ easing off a 1-month peak",
+    deltaClass: "delta-up",
+    series: [6.00,6.02,6.05,6.03,6.08,6.10,6.07,6.12,6.15,6.13,6.18,6.22,6.30,6.37,6.32,6.28,6.25,6.22,6.20,6.18,6.22,6.25,6.28,6.24,6.20,6.18,6.21,6.19,6.20,6.20],
+    stats: [
+      ["Material price","$6.20/lb"],
+      ["Tariff surcharge","+$3.10/lb (Sec. 232, 50% tier)"],
+      ["Freight estimate","+$0.12/lb (est.)"],
+      ["Landed cost","$9.42/lb"],
+      ["Trend (30d)","Choppy — tight China scrap supply vs. soft demand"]
+    ],
+    verdict: {cls:"verdict-watch", title:"WATCH — volatile, no clear direction", body:"Copper is bouncing around after a supply-driven spike faded. Section 232 treats wholly-copper articles at the same 50% tier as steel and aluminum — worth confirming which tier applies to your specific import."}
+  },
+  lumber: {
+    unit: "USD / thousand board feet (framing lumber)",
+    price: "642.50",
+    deltaText: "↑ near a 1-year high",
+    deltaClass: "delta-up",
+    series: [530,535,540,545,548,552,558,562,565,570,575,580,585,590,595,600,605,610,615,618,622,625,628,630,633,636,638,640,642,642.5],
+    stats: [
+      ["Material price","$642.50/MBF"],
+      ["Tariff surcharge","+$225/MBF (~35% AD/CVD, Canadian softwood)"],
+      ["Freight estimate","+$18/MBF (est.)"],
+      ["Landed cost","$885.50/MBF"],
+      ["Trend (30d)","Rising — wildfires + Canadian mill closures tightening supply"]
+    ],
+    verdict: {cls:"verdict-buy", title:"CAUTION — supply-driven price spike", body:"Western Canada wildfires and mill closures have pushed lumber to a one-year high. If you buy any wood-based packaging or dunnage, this is worth watching closely right now."}
+  },
+  resin: {
+    unit: "USD / lb (PE — seals, reservoirs, packaging)",
+    price: "0.62",
+    deltaText: "↓ 5% vs 90-day high",
+    deltaClass: "delta-down",
+    series: [0.66,0.65,0.65,0.64,0.64,0.63,0.63,0.64,0.63,0.62,0.63,0.62,0.61,0.62,0.61,0.62,0.63,0.62,0.61,0.62,0.61,0.62,0.62,0.61,0.62,0.62,0.61,0.62,0.62,0.62],
+    stats: [
+      ["Material price","$0.62/lb"],
+      ["Tariff surcharge","+$0.03/lb (imported resin blend)"],
+      ["Freight estimate","+$0.04/lb"],
+      ["Landed cost","$0.69/lb"],
+      ["Trend (30d)","Softening slightly"]
+    ],
+    verdict: {cls:"verdict-watch", title:"WATCH — softening trend", body:"PE resin landed cost has eased slightly over the past month. Not a dramatic move, but worth a look if you're timing a larger packaging or seal-component order."}
+  },
+  freight: {
+    unit: "USD / mile (fuel surcharge component)",
+    price: "0.51",
+    deltaText: "↓ off recent highs as diesel eased",
+    deltaClass: "delta-down",
+    series: [0.58,0.57,0.56,0.55,0.56,0.54,0.55,0.53,0.54,0.52,0.53,0.52,0.51,0.52,0.51,0.50,0.51,0.52,0.51,0.50,0.51,0.52,0.51,0.50,0.51,0.51,0.50,0.51,0.51,0.51],
+    stats: [
+      ["National avg. diesel","$4.57/gal (EIA)"],
+      ["Baseline (formula input)","$1.25/gal"],
+      ["Assumed truck MPG","6.5"],
+      ["Fuel surcharge","$0.51/mile"],
+      ["Formula","(Diesel − Baseline) ÷ MPG"]
+    ],
+    verdict: {cls:"verdict-watch", title:"Real, but a generic estimate", body:"This uses the industry-standard FSC formula and a real national average diesel price — but your actual carrier's baseline and MPG assumption may differ. Treat this as a sanity check against your freight invoices, not a replacement for them."}
+  },
+  fx: {
+    unit: "CNY per 1 USD (mid-market)",
+    price: "6.77",
+    deltaText: "↓ USD near a 52-week low vs CNY",
+    deltaClass: "delta-down",
+    series: [6.84,6.83,6.82,6.81,6.80,6.79,6.80,6.79,6.78,6.79,6.78,6.77,6.78,6.77,6.76,6.77,6.78,6.77,6.76,6.77,6.78,6.77,6.76,6.77,6.77,6.76,6.77,6.77,6.77,6.77],
+    stats: [
+      ["Current rate","1 USD = 6.77 CNY"],
+      ["90-day range","6.7567 – 6.8405"],
+      ["YoY change","USD down ~5.5% vs CNY"],
+      ["Impact on China imports","Dollar buys ~5.5% less than a year ago"],
+      ["Trend (30d)","USD gradually weakening vs CNY"]
+    ],
+    verdict: {cls:"verdict-watch", title:"WATCH — dollar near a 52-week low vs CNY", body:"If you source from China, your effective cost in USD terms has been drifting up over the past year purely from currency movement, separate from any material price or tariff change."}
+  }
+};
+
+
+
+function renderChart(series){
+  const svg = document.getElementById('chartSvg');
+  const w = 500, h = 180, pad = 10;
+  const min = Math.min(...series), max = Math.max(...series);
+  const span = max - min || 1;
+  const stepX = (w - pad*2) / (series.length - 1);
+  const points = series.map((v,i) => {
+    const x = pad + i*stepX;
+    const y = h - pad - ((v-min)/span)*(h-pad*2);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  const areaPoints = `${pad},${h-pad} ` + points + ` ${w-pad},${h-pad}`;
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="fadeGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#7fa2c2" stop-opacity="0.35"/>
+        <stop offset="100%" stop-color="#7fa2c2" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <polygon points="${areaPoints}" fill="url(#fadeGrad)"/>
+    <polyline points="${points}" fill="none" stroke="#7fa2c2" stroke-width="2"/>
+    <circle cx="${pad + (series.length-1)*stepX}" cy="${h - pad - ((series[series.length-1]-min)/span)*(h-pad*2)}" r="4" fill="#e8a33d"/>
+  `;
+}
+
+function renderMaterial(key){
+  const d = datasets[key];
+  document.getElementById('priceBig').textContent = d.price;
+  document.querySelector('.price-unit').textContent = d.unit;
+  const deltaEl = document.getElementById('priceDelta');
+  deltaEl.textContent = d.deltaText;
+  deltaEl.className = 'price-delta ' + d.deltaClass;
+  renderChart(d.series);
+  const statList = document.getElementById('statList');
+  statList.innerHTML = d.stats.map(([k,v]) => `<div class="stat-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('');
+  const vb = document.getElementById('verdictBox');
+  vb.className = 'verdict-box ' + d.verdict.cls;
+  vb.innerHTML = `<div class="verdict-title">${d.verdict.title}</div><p>${d.verdict.body}</p>`;
+}
+
+document.querySelectorAll('.demo-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderMaterial(tab.dataset.material);
+  });
+});
+renderMaterial('rawaluminum');
+
+// ---------- Live data overlay ----------
+// Tries to fetch today's real numbers (generated daily by the backend
+// automation) and merge them into the static defaults above. If this
+// fetch fails for any reason — file doesn't exist yet, opened locally
+// without hosting, network hiccup — the page just keeps showing the
+// static illustrative numbers already baked in above. Never breaks.
+fetch('./dashboard_data.json')
+  .then(res => res.ok ? res.json() : Promise.reject())
+  .then(liveData => {
+    Object.keys(liveData).forEach(key => {
+      if (datasets[key]) {
+        Object.assign(datasets[key], liveData[key]);
+      }
+    });
+    // Re-render whichever tab is currently active, now with live data
+    const activeTab = document.querySelector('.demo-tab.active');
+    if (activeTab) renderMaterial(activeTab.dataset.material);
+  })
+  .catch(() => { /* silent — static fallback numbers stay as-is */ });
+
+// ---------- Live data overlay ----------
+// Tries to fetch today's real numbers (generated daily by the backend
+// automation) and merge them into the static defaults above. If this
+// fetch fails for any reason — file doesn't exist yet, opened locally
+// without hosting, network hiccup — the page just keeps showing the
+</script>
+</body>
+</html>

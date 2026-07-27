@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Record — Coilwatch</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2314181c'/%3E%3Crect x='30' y='30' width='40' height='40' rx='6' fill='%23e8a33d'/%3E%3C/svg%3E">
+<meta name="description" content="How Coilwatch calculates every signal — the real formulas and real data sources, with nothing hidden.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span class="logo-mark"></span>COILWATCH</div>
+  <div class="navlinks">
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="tools.html">Tools</a>
+    <a href="track-record.html" class="active">Track Record</a>
+    <a href="index.html#pricing">Pricing</a>
+  </div>
+  <a href="index.html#waitlist" class="nav-cta">Join waitlist</a>
+</nav>
+
+<div class="page-header">
+  <div class="wrap">
+    <h1>No black box</h1>
+    <p>Most procurement data tools don't show their work. Here's exactly how every number on this site is calculated, and an honest note on what we don't have yet.</p>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Where we're at, honestly</div>
+      <h2>Coilwatch hasn't launched yet</h2>
+      <p style="max-width:640px;">This is a new product — there isn't a long history of alerts sent to real subscribers to show you yet, and we're not going to fake one. What we can show you is exactly how the numbers are calculated and where the underlying data comes from, so you can judge the method before there's a track record to judge.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">The formula</div>
+      <h2>The same math, every time, for every material</h2>
+      <p>No AI black box, no proprietary model. One formula, applied consistently:</p>
+    </div>
+    <div class="calc-card" style="max-width:600px;">
+      <p style="font-family:var(--mono); font-size:18px; text-align:center; padding:20px 0; color:var(--amber);">
+        Landed Cost = Material Price × (1 + Tariff %) + Freight
+      </p>
+      <p style="color:var(--text-dim); font-size:13.5px;">That's it. The same formula runs on the free calculator, the dashboard, and the paid alerts. Nothing hidden behind "our proprietary algorithm."</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Where the data comes from</div>
+      <h2>Real sources, named directly</h2>
+    </div>
+    <div class="steps" style="grid-template-columns:repeat(2,1fr); gap:22px;">
+      <div class="step">
+        <div class="num">METALS</div>
+        <h4>Aluminum & Copper</h4>
+        <p>Live spot prices from a market data API tracking LME/COMEX benchmarks.</p>
+      </div>
+      <div class="step">
+        <div class="num">STEEL & RESIN</div>
+        <h4>Index-Scaled Estimates</h4>
+        <p>No free live spot-price feed exists for these, so we scale a real government price index (FRED Producer Price Index) against a spot price we've verified — clearly labeled as an estimate, not a live quote.</p>
+      </div>
+      <div class="step">
+        <div class="num">LUMBER</div>
+        <h4>Index-Scaled Estimate</h4>
+        <p>Same method as steel — scaled from FRED's lumber PPI series, calibrated against a real checked spot price.</p>
+      </div>
+      <div class="step">
+        <div class="num">FREIGHT</div>
+        <h4>Real Formula, Real Fuel Data</h4>
+        <p>Uses the industry-standard fuel surcharge formula with the real national average diesel price from the U.S. Energy Information Administration (EIA) — a generic estimate, not your specific carrier's rate.</p>
+      </div>
+      <div class="step">
+        <div class="num">TARIFFS</div>
+        <h4>Federal Register</h4>
+        <p>New steel/aluminum trade policy notices are pulled directly from the U.S. Federal Register — a free, public, no-key-required government source.</p>
+      </div>
+      <div class="step">
+        <div class="num">CURRENCY</div>
+        <h4>FRED FX Rates</h4>
+        <p>Daily exchange rate data from the Federal Reserve's public FRED database — genuinely free, no subscription.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="border-bottom:none;">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">What we'll add here</div>
+      <h2>Once alerts are actually going out</h2>
+      <p style="max-width:640px;">Once real signals are being sent to real subscribers, this page becomes a running log: every alert, what it said, and what the price actually did afterward — good calls and bad ones both shown. That's the plan. It's just not built yet, because it can't honestly exist before the product does.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p style="color:var(--text-dim); font-size:13px; margin-bottom:10px;">Built by someone with a supply chain and procurement background, as a side project to solve a problem worth solving properly.</p>
+  © 2026 Coilwatch. Signals are informational only — not investment, legal, or trade compliance advice.
+</footer>
+
+</body>
+</html>
