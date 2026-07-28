@@ -15,13 +15,15 @@
     --mono: 'IBM Plex Mono', monospace;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
+  html{scroll-behavior:smooth; overflow-x:hidden; max-width:100%;}
   body{
     background: var(--bg);
     color: var(--text);
     font-family: var(--body);
     line-height:1.5;
     -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    max-width:100%;
   }
   a{color:inherit;}
   .wrap{max-width:1080px; margin:0 auto; padding:0 28px;}
@@ -31,18 +33,26 @@
     display:flex; align-items:center; justify-content:space-between;
     padding:22px 28px; border-bottom:1px solid var(--line);
     position:sticky; top:0; background:rgba(20,24,28,0.92); backdrop-filter:blur(6px); z-index:50;
+    gap:16px;
   }
   .logo{
     font-family:var(--display); font-weight:600; font-size:20px; letter-spacing:0.5px;
-    display:flex; align-items:center; gap:10px;
+    display:flex; align-items:center; gap:10px; flex-shrink:0;
   }
   .logo-mark{
     width:11px; height:11px; background:var(--amber); border-radius:2px;
     box-shadow:0 0 0 3px rgba(232,163,61,0.18);
   }
-  .navlinks{display:flex; gap:32px; font-size:14px; color:var(--text-dim);}
+  .navlinks{
+    display:flex; gap:32px; font-size:14px; color:var(--text-dim);
+    overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+    min-width:0;
+  }
+  .navlinks::-webkit-scrollbar{display:none;}
+  .navlinks a{flex-shrink:0; white-space:nowrap;}
   .navlinks a:hover{color:var(--text);}
   .nav-cta{
+    flex-shrink:0;
     background:var(--amber); color:#1a1408; font-weight:600; font-size:14px;
     padding:9px 18px; border-radius:3px; text-decoration:none;
   }
@@ -114,10 +124,15 @@
   .demo-panel{
     background:var(--bg-panel); border:1px solid var(--line); border-radius:6px; overflow:hidden;
   }
-  .demo-tabs{display:flex; border-bottom:1px solid var(--line);}
+  .demo-tabs{
+    display:flex; border-bottom:1px solid var(--line);
+    overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+  }
+  .demo-tabs::-webkit-scrollbar{display:none;}
   .demo-tab{
     padding:14px 22px; font-family:var(--mono); font-size:13px; color:var(--text-dim);
     cursor:pointer; border-right:1px solid var(--line); user-select:none;
+    flex-shrink:0; white-space:nowrap;
   }
   .demo-tab.active{color:var(--text); background:var(--bg-panel-2);}
   .demo-body{padding:28px; display:grid; grid-template-columns:1.3fr 1fr; gap:32px;}
@@ -169,7 +184,7 @@
   .email-copy li{
     font-size:14px; color:var(--text-dim); padding-left:20px; position:relative; margin-bottom:10px;
   }
-  .email-copy li::before{content:'—'; position:absolute; left:0; color:var(--steel-light);}
+  .email-copy li::before{content:'â€”'; position:absolute; left:0; color:var(--steel-light);}
 
   /* PRICING */
   .pricing-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
@@ -213,7 +228,7 @@
   .audit-grid{display:grid; grid-template-columns:1fr 1fr; gap:44px; align-items:start;}
   .audit-copy ul{margin:20px 0; padding-left:0; list-style:none;}
   .audit-copy li{font-size:14px; color:var(--text-dim); padding-left:20px; position:relative; margin-bottom:10px;}
-  .audit-copy li::before{content:'—'; position:absolute; left:0; color:var(--steel-light);}
+  .audit-copy li::before{content:'â€”'; position:absolute; left:0; color:var(--steel-light);}
   .audit-card{background:var(--bg-panel); border:1px solid var(--line); border-radius:6px; padding:26px;}
   .audit-card h4{font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-dim); margin-bottom:18px;}
   .audit-field{margin-bottom:14px;}
@@ -315,11 +330,19 @@
     .steps, .pricing-grid{grid-template-columns:1fr;}
     h1{font-size:36px;}
     .wl-form{flex-direction:column;}
+    .calc-row3, .audit-row2{grid-template-columns:1fr;}
+  }
+
+  @media (max-width:480px){
+    nav{padding:14px 16px; gap:10px;}
+    .logo{font-size:16px;}
+    .navlinks{gap:20px;}
+    .nav-cta{padding:8px 12px; font-size:13px;}
   }
 /* NAV active state */
 .navlinks a.active{color:var(--text); border-bottom:1px solid var(--amber); padding-bottom:4px;}
 
-/* HOME — OVERVIEW CARDS */
+/* HOME â€” OVERVIEW CARDS */
 .overview-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
 .overview-card{
   background:var(--bg-panel); border:1px solid var(--line); border-radius:6px; padding:26px;
