@@ -108,10 +108,12 @@
       <div id="blRows"></div>
       <button class="audit-btn" id="blCalcBtn" style="margin-top:8px;">Calculate blended cost</button>
 
-      <table class="sv-table" id="blTable" style="margin-top:22px;">
-        <thead><tr><th>Component</th><th>Material</th><th>Tariff</th><th>Freight</th><th>Landed</th></tr></thead>
-        <tbody id="blTableBody"></tbody>
-      </table>
+      <div style="overflow-x:auto;">
+        <table class="sv-table" id="blTable" style="margin-top:22px;">
+          <thead><tr><th>Component</th><th>Material</th><th>Tariff</th><th>Freight</th><th>Landed</th></tr></thead>
+          <tbody id="blTableBody"></tbody>
+        </table>
+      </div>
 
       <div class="calc-total">
         <span class="k">Total blended landed cost</span>
@@ -253,12 +255,14 @@
         <button class="sv-add-btn" id="svAddBtn">Add entry</button>
       </div>
 
-      <table class="sv-table" id="svTable">
-        <thead>
-          <tr><th>Part / PO</th><th>Quoted</th><th>Final</th><th>Qty</th><th>Savings</th><th></th></tr>
-        </thead>
-        <tbody id="svTableBody"></tbody>
-      </table>
+      <div style="overflow-x:auto;">
+        <table class="sv-table" id="svTable">
+          <thead>
+            <tr><th>Part / PO</th><th>Quoted</th><th>Final</th><th>Qty</th><th>Savings</th><th></th></tr>
+          </thead>
+          <tbody id="svTableBody"></tbody>
+        </table>
+      </div>
       <div class="sv-empty" id="svEmpty">No entries yet — add your first PO above.</div>
 
       <div class="sv-summary">
