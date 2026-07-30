@@ -49,7 +49,7 @@
             <div class="price-delta delta-down" id="priceDelta">↓ 17% vs early June high</div>
           </div>
           <svg class="chart" viewBox="0 0 500 180" preserveAspectRatio="none" id="chartSvg"></svg>
-          <div class="chart-caption"><span>90 days ago</span><span>Today</span></div>
+          <div class="chart-caption"><span>30 days ago</span><span>Drag the dot to see any day's price →</span></div>
         </div>
         <div>
           <div class="stat-list" id="statList"></div>
@@ -180,18 +180,34 @@ const datasets = {
 
 
 
+let currentSeriesData = []; // populated on each render: [{x, y, price, label}, ...]
+
 function renderChart(series){
   const svg = document.getElementById('chartSvg');
   const w = 500, h = 180, pad = 10;
   const min = Math.min(...series), max = Math.max(...series);
   const span = max - min || 1;
   const stepX = (w - pad*2) / (series.length - 1);
-  const points = series.map((v,i) => {
+
+  // Build date labels by counting back from today. The underlying series
+  // data is illustrative (or real, once live data is wired in) — either
+  // way, "N days ago" relative to today is an honest label since we don't
+  // assert an exact historical calendar date beyond what the data implies.
+  const today = new Date();
+  currentSeriesData = series.map((v, i) => {
     const x = pad + i*stepX;
     const y = h - pad - ((v-min)/span)*(h-pad*2);
-    return `${x.toFixed(1)},${y.toFixed(1)}`;
-  }).join(' ');
+    const daysAgo = series.length - 1 - i;
+    const d = new Date(today);
+    d.setDate(d.getDate() - daysAgo);
+    const label = daysAgo === 0 ? 'Today' : d.toLocaleDateString('en-US', {month:'short', day:'numeric'});
+    return {x, y, price: v, label};
+  });
+
+  const points = currentSeriesData.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
   const areaPoints = `${pad},${h-pad} ` + points + ` ${w-pad},${h-pad}`;
+  const last = currentSeriesData[currentSeriesData.length - 1];
+
   svg.innerHTML = `
     <defs>
       <linearGradient id="fadeGrad" x1="0" y1="0" x2="0" y2="1">
@@ -201,8 +217,83 @@ function renderChart(series){
     </defs>
     <polygon points="${areaPoints}" fill="url(#fadeGrad)"/>
     <polyline points="${points}" fill="none" stroke="#7fa2c2" stroke-width="2"/>
-    <circle cx="${pad + (series.length-1)*stepX}" cy="${h - pad - ((series[series.length-1]-min)/span)*(h-pad*2)}" r="4" fill="#e8a33d"/>
+    <line id="chartGuide" x1="${last.x}" y1="${pad}" x2="${last.x}" y2="${h-pad}" stroke="#3a4451" stroke-width="1" stroke-dasharray="3,3"/>
+    <circle id="chartDot" cx="${last.x}" cy="${last.y}" r="5" fill="#e8a33d" style="cursor:grab;"/>
+    <g id="chartTooltip" pointer-events="none">
+      <rect id="chartTooltipBg" rx="3" fill="#1c1c1c" stroke="#3a4451"/>
+      <text id="chartTooltipText" fill="#eceae3" font-family="IBM Plex Mono, monospace" font-size="11"></text>
+    </g>
   `;
+
+  updateChartDot(currentSeriesData.length - 1);
+  attachChartDrag();
+}
+
+function updateChartDot(index){
+  const p = currentSeriesData[index];
+  if (!p) return;
+  const dot = document.getElementById('chartDot');
+  const guide = document.getElementById('chartGuide');
+  const tooltipText = document.getElementById('chartTooltipText');
+  const tooltipBg = document.getElementById('chartTooltipBg');
+  if (!dot) return;
+
+  dot.setAttribute('cx', p.x);
+  dot.setAttribute('cy', p.y);
+  guide.setAttribute('x1', p.x);
+  guide.setAttribute('x2', p.x);
+
+  const priceStr = p.price >= 100 ? p.price.toLocaleString(undefined,{maximumFractionDigits:0}) : p.price.toFixed(2);
+  const label = `${p.label} · $${priceStr}`;
+  tooltipText.textContent = label;
+
+  const textWidth = label.length * 6.3;
+  let tx = p.x - textWidth/2;
+  tx = Math.max(4, Math.min(tx, 500 - textWidth - 4));
+  const ty = p.y < 40 ? p.y + 26 : p.y - 14;
+
+  tooltipBg.setAttribute('x', tx - 6);
+  tooltipBg.setAttribute('y', ty - 12);
+  tooltipBg.setAttribute('width', textWidth + 12);
+  tooltipBg.setAttribute('height', 20);
+  tooltipText.setAttribute('x', tx);
+  tooltipText.setAttribute('y', ty + 3);
+}
+
+function chartNearestIndex(clientX){
+  const svg = document.getElementById('chartSvg');
+  const pt = svg.createSVGPoint();
+  pt.x = clientX; pt.y = 0;
+  const ctm = svg.getScreenCTM();
+  if (!ctm) return currentSeriesData.length - 1;
+  const loc = pt.matrixTransform(ctm.inverse());
+  let nearest = 0, minDist = Infinity;
+  currentSeriesData.forEach((p, i) => {
+    const dist = Math.abs(p.x - loc.x);
+    if (dist < minDist) { minDist = dist; nearest = i; }
+  });
+  return nearest;
+}
+
+let chartDragging = false;
+
+function attachChartDrag(){
+  const svg = document.getElementById('chartSvg');
+  if (!svg || svg.dataset.dragAttached) return;
+  svg.dataset.dragAttached = 'true';
+  svg.style.touchAction = 'none';
+
+  svg.addEventListener('pointerdown', (e) => {
+    chartDragging = true;
+    svg.setPointerCapture(e.pointerId);
+    updateChartDot(chartNearestIndex(e.clientX));
+  });
+  svg.addEventListener('pointermove', (e) => {
+    if (!chartDragging) return;
+    updateChartDot(chartNearestIndex(e.clientX));
+  });
+  svg.addEventListener('pointerup', () => { chartDragging = false; });
+  svg.addEventListener('pointercancel', () => { chartDragging = false; });
 }
 
 function renderMaterial(key){
